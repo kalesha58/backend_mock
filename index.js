@@ -7,6 +7,7 @@ const PORT=8085
 dotenv.config()
 app.use(express.json())
 app.use(cors())
+// const { notFound, errorHandler } = require("./middleWare/errorMiddleWare");
 const userRoute=require("./routes/userRoutes")
 
 app.get("/",(req,res)=>{
@@ -15,6 +16,8 @@ app.get("/",(req,res)=>{
 app.use("/",userRoute)
 // ======================MONGODB CONNCETIONS+++++++++=========================
 dbConnection();
+// app.use(notFound)
+// app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log("server runnig on http://localhost:8085");

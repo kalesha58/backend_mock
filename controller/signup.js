@@ -1,6 +1,7 @@
 const signupUser = require("../models/signupModel");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken");
+const bcrypt = require("bcrypt");
 
 const signUp = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -27,20 +28,44 @@ const signUp = asyncHandler(async (req, res) => {
   }
 });
 const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await signupUser.findOne({ email });
-  const hashedPassword = await user.matchPassword(password);
-  if (user && hashedPassword) {
-    res.json({
-      _id: user._id,
+    const { email, password } = req.body;
+    const user = await signupUser.findOne({ email });
+    const hashedPassword = await user.matchPassword(password);
+    console.log(hashedPassword)
+    if (user && hashedPassword) {
+      res.json({
+        _id: user._id,
 
-      email: user.email,
+        email: user.email,
 
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error("Invalid Email or password");
-  }
-});
+        token:generateToken(user._id)
+      });
+    } else {
+      res.status(400);
+      throw new Error("Invalid Email or password");
+    }
+  });
+// const login = async (req, res) => {
+//   let { email, password } = req.body;
+//   const d = await signupUser.find({ email });
+//   let hashedPassword =d. password;
+//   if (d.length > 0) {
+//     try {
+//       bcrypt.compare(password, hashedPassword, function (err, resu) {
+//         if (resu) {
+//           res.send({
+//             _id: d._id,
+
+//             email: d.email,
+
+//             token: generateToken(d._id),
+//           });
+//         }
+//       });
+//     } catch (error) {
+//       res.status(400);
+//       throw new Error("Invalid Email or password");
+//     }
+//   }
+// };
 module.exports = { signUp, login };
